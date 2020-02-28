@@ -98,12 +98,13 @@ module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
     exception Empty
 
     type element = Element.t
+
     type stack = element list
 
     let empty : stack = []
 
     let push (el : element) (s : stack) : stack =
-       el :: s
+      el :: s
 
     let pop_helper (s : stack) : (element * stack) =
       match s with
@@ -119,7 +120,7 @@ module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
     let map : (element -> element) -> stack -> stack  =
       List.map
 
-    let filter : (element -> bool) -> stack -> stack=
+    let filter : (element -> bool) -> stack -> stack =
       List.filter
 
     let fold_left : ('a -> element -> 'a) -> 'a -> stack -> 'a =
@@ -127,7 +128,7 @@ module MakeStack (Element: SERIALIZE) : (STACK with type element = Element.t) =
 
     let serialize (s : stack) : string =
       let string_join x y = Element.serialize y
-                  ^ (if x <> "" then ":" ^ x else "") in
+                    ^ (if x <> "" then ":" ^ x else "") in
       fold_left string_join "" s
   end ;;
 
@@ -141,6 +142,9 @@ module IntSerialize : (SERIALIZE with type t = int) =
     type t = int
     let serialize = string_of_int
   end ;;
+
+module IntStack : (STACK with type element = IntSerialize.t) =
+  MakeStack(IntSerialize) ;;
 
 (*......................................................................
 Exercise 1C: Make a module `IntStringStack` that creates a stack whose
